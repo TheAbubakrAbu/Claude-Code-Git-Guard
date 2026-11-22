@@ -1,0 +1,29 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Guard, installer, and hygiene tests (nothing outside a temp folder is touched)
+        run: python3 -m unittest discover -s tests -v
+      - name: Installer wires and unwires a throwaway settings.json
+        run: |
+          bash -n install.sh
+          bash install.sh --settings "$RUNNER_TEMP/settings.json" --dest "$RUNNER_TEMP/hooks"
+          python3 -c "import json,os; d=json.load(open(os.environ['RUNNER_TEMP']+'/settings.json')); assert d['hooks']['PreToolUse'][0]['matcher']=='Bash', d"
+          ! python3 "$RUNNER_TEMP/hooks/git-guard.py" --check 'git push'
+          python3 "$RUNNER_TEMP/hooks/git-guard.py" --check 'git status'
+          bash install.sh --settings "$RUNNER_TEMP/settings.json" --dest "$RUNNER_TEMP/hooks" --uninstall --purge
+          python3 -c "import json,os; d=json.load(open(os.environ['RUNNER_TEMP']+'/settings.json')); assert 'hooks' not in d, d"
