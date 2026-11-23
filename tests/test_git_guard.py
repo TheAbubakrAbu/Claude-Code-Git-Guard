@@ -133,6 +133,11 @@ PASSED = [
     "gh repo clone x/y",
     "gh release list",
     'echo "remember to push"',
+    # a safe git or gh command chained to something harmless: each part is judged on its own
+    "gh pr view 12 && echo create",
+    "git branch; ls -d */",
+    "git clean -n || echo -f",
+    "git branch -a | grep -d skip main",
     "cat .gitignore",
     "cd ~/git/project && ls",
     "brew install git",

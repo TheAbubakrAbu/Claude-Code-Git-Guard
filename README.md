@@ -192,7 +192,7 @@ python3 -m unittest discover -s tests -v                  # 27 tests, nothing ou
 python3 git-guard.py --check 'git -C "/tmp/a b" push'     # try any command by hand
 ```
 
-The tests cover 60 commands that must be stopped and 43 that must pass, check that everything the first published version stopped is still stopped, feed the hook malformed payloads, time worst-case inputs, and run the installer against a throwaway `HOME` and `settings.json`. A hygiene test keeps em dashes, home-folder paths, and signing identities out of the repository. The [GitHub Actions workflow](.github/workflows/tests.yml) runs the suite on macOS and Ubuntu and exercises the installer end to end.
+The tests cover 60 commands that must be stopped and 47 that must pass, check that everything the first published version stopped is still stopped, feed the hook malformed payloads, time worst-case inputs, and run the installer against a throwaway `HOME` and `settings.json`. A hygiene test keeps em dashes, home-folder paths, and signing identities out of the repository. The [GitHub Actions workflow](.github/workflows/tests.yml) runs the suite on macOS and Ubuntu and exercises the installer end to end.
 
 ## Uninstall
 
